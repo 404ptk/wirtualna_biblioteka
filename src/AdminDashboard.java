@@ -3,20 +3,20 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Dashboard extends JDialog{
+public class AdminDashboard extends JDialog{
     private JPanel JPanel1;
     private JButton wypozyczButton;
     private JButton edytujButton;
-    private JButton closeButton;
-    private JPanel close;
     private JTable table1;
+    private JPanel close;
+    private JButton closeButton;
 
     public static void main(String[] args) {
-        Dashboard dashboard = new Dashboard(null);
-        dashboard.setVisible(true);
+        AdminDashboard admindashboard = new AdminDashboard(null);
+        admindashboard.setVisible(true);
     }
 
-    public Dashboard(JFrame parent){
+    public AdminDashboard(JFrame parent){
         super(parent);
         setTitle("Dashboard");
         this.setContentPane(JPanel1);
@@ -36,3 +36,4 @@ public class Dashboard extends JDialog{
         });
     }
 }
+

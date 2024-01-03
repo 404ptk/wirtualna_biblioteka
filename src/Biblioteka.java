@@ -13,7 +13,7 @@ public class Biblioteka extends  JFrame{
         biblioteka.setVisible(true);
     }
 
-    public  Biblioteka(){
+    public Biblioteka(){
         super("Dostępne książki");
         this.setContentPane(this.JPanel1);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
