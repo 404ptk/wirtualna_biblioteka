@@ -16,27 +16,27 @@ public class LoginForm extends JDialog{
     private JPanel Email;
     private JPanel Password;
 
-//    public static void main(String[] args) {
-//        LoginForm loginForm = new LoginForm(null);
-//        loginForm.setVisible(true);
-//
-//        User user = loginForm.user;
-//        if (user != null){
-//            System.out.println("Successful Authentication of " + user.name);
-//            System.out.println("\t\tEmail: " + user.email);
-//            System.out.println("\t\tPhone: " + user.phone);
-//            System.out.println("\t\tAddress: " + user.address);
-//        }else{
-//            System.out.println("Authentication canceled");
-//        }
-//    }
+    public static void main(String[] args) {
+        LoginForm loginForm = new LoginForm(null);
+        loginForm.setVisible(true);
+
+        User user = loginForm.user;
+        if (user != null){
+            System.out.println("Successful Authentication of " + user.name);
+            System.out.println("\t\tEmail: " + user.email);
+            System.out.println("\t\tPhone: " + user.phone);
+            System.out.println("\t\tAddress: " + user.address);
+        }else{
+            System.out.println("Authentication canceled");
+        }
+    }
 
     LoginForm(JFrame parent){
         super(parent);
         setTitle("Login form");
         this.setContentPane(JPanel1);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        int width = 500, height = 400;
+        int width = 800, height = 600;
         setModal(true);
         setMinimumSize(new Dimension(width, height));
         setLocationRelativeTo(parent);

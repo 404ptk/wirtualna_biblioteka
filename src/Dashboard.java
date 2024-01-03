@@ -5,10 +5,8 @@ import java.awt.event.ActionListener;
 
 public class Dashboard extends JDialog{
     private JPanel JPanel1;
-    private JButton registerButton;
-    private JButton clearButton;
-    private JButton deleteButton;
-    private JButton editButton;
+    private JButton wypozyczButton;
+    private JButton edytujButton;
     private JButton closeButton;
     private JPanel close;
     private JTable table1;
