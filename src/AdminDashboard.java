@@ -1,11 +1,11 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
 
-public class AdminDashboard extends JDialog{
+public class AdminDashboard extends JFrame{
     private JPanel JPanel1;
     private JButton wypozyczButton;
     private JButton edytujButton;
@@ -27,7 +27,6 @@ public class AdminDashboard extends JDialog{
         this.setContentPane(JPanel1);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         int width = 800, height = 600;
-        setModal(true);
         setMinimumSize(new Dimension(width, height));
         setLocationRelativeTo(null);
 
@@ -46,7 +45,28 @@ public class AdminDashboard extends JDialog{
             }
         });
 
-        Database.getConnection();
+        Connection connection = Database.getConnection();
+
+        String zapytanie = "SELECT * FROM users";
+        try{
+            PreparedStatement ps = connection.prepareStatement(zapytanie);
+            ResultSet rs = ps.executeQuery();
+            DefaultTableModel model = new DefaultTableModel(new String[]{
+                    "Nazwa użytkownika",
+                    "Hasło"
+            }, 0);
+
+            while(rs.next()){
+                model.addRow(new String[]{
+                        rs.getString("name"),
+                        rs.getString("password")
+                });
+            }
+            table1.setModel(model);
+        }catch(Exception ex){
+            System.out.println("Error: " + ex.getMessage());
+        }
+        //String zapytanie = "SELECT * FROM "
     }
 }
 

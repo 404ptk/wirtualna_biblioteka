@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 
-public class LoginForm extends JDialog{
+public class LoginForm extends JFrame{
     private JPanel JPanel1;
     private JPanel Buttons;
     private JPanel Login;
@@ -32,14 +32,11 @@ public class LoginForm extends JDialog{
     }
 
     LoginForm(){
-        //super(parent);
         setTitle("Logowanie");
         this.setContentPane(JPanel1);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         int width = 800, height = 600;
-        setModal(true);
         setMinimumSize(new Dimension(width, height));
-        //setLocationRelativeTo(parent);
         setLocationRelativeTo(null);
 
         okButton.addActionListener(new ActionListener() {
@@ -51,13 +48,23 @@ public class LoginForm extends JDialog{
                 user = getAutenticateUer(password);
 
                 if (user != null){
-                    dispose();
-                    Dashboard dashboard = new Dashboard();
-                    dashboard.setVisible(true);
+                    if (user.name.equals("root") && user.password.equals("root")){
+                        dispose();
+                        try {
+                            AdminDashboard adminDashboard = new AdminDashboard();
+                            adminDashboard.setVisible(true);
+                        } catch (SQLException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }else{
+                        dispose();
+                        Dashboard dashboard = new Dashboard();
+                        dashboard.setVisible(true);
+                    }
                 }else{
                     JOptionPane.showMessageDialog(LoginForm.this,
                             "Niepoprawny adres email lub hasło",
-                            "Try again",
+                            "Spróbuj ponownie",
                             JOptionPane.ERROR_MESSAGE);
                 }
             }

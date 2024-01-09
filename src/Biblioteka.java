@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Biblioteka extends  JFrame{
+public class Biblioteka extends JFrame{
     private JPanel JPanel1;
     private JTable table1;
     private JButton wypozyczButton;
