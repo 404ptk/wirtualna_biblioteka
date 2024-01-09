@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class AdminDashboard extends JDialog{
     private JPanel JPanel1;
@@ -15,12 +17,12 @@ public class AdminDashboard extends JDialog{
     private JButton zmienosobeButton;
     private JButton oddajButton;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         AdminDashboard admindashboard = new AdminDashboard();
         admindashboard.setVisible(true);
     }
 
-    public AdminDashboard(){
+    public AdminDashboard() throws SQLException {
         setTitle("Dashboard");
         this.setContentPane(JPanel1);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -43,6 +45,8 @@ public class AdminDashboard extends JDialog{
                 adminBiblioteka.setVisible(true);
             }
         });
+
+        Database.getConnection();
     }
 }
 
