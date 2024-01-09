@@ -3,25 +3,19 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AdminDashboard extends JDialog{
+public class AdminBiblioteka extends JDialog{
     private JPanel JPanel1;
-    private JButton wypozyczButton;
-    private JButton edytujButton;
     private JTable table1;
-    private JPanel close;
     private JButton closeButton;
-    private JButton ksiazkiButton;
-    private JButton usunButton;
-    private JButton zmienosobeButton;
-    private JButton oddajButton;
+    private JButton wsteczButton;
 
     public static void main(String[] args) {
         AdminDashboard admindashboard = new AdminDashboard();
         admindashboard.setVisible(true);
     }
 
-    public AdminDashboard(){
-        setTitle("Dashboard");
+    public AdminBiblioteka(){
+        setTitle("Księgarnia");
         this.setContentPane(JPanel1);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         int width = 800, height = 600;
@@ -33,16 +27,20 @@ public class AdminDashboard extends JDialog{
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
+
             }
         });
-        ksiazkiButton.addActionListener(new ActionListener() {
+        wsteczButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                AdminBiblioteka adminBiblioteka = new AdminBiblioteka();
-                adminBiblioteka.setVisible(true);
+
+                AdminDashboard adminDashboard = new AdminDashboard();
+                adminDashboard.setVisible(true);
             }
         });
     }
 }
+
+
 

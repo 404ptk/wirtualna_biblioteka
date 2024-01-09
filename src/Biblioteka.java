@@ -7,6 +7,7 @@ public class Biblioteka extends  JFrame{
     private JTable table1;
     private JButton wypozyczButton;
     private JButton closeButton;
+    private JButton wsteczButton;
 
     public static void main(String[] args) {
         Biblioteka biblioteka = new Biblioteka();
@@ -20,10 +21,20 @@ public class Biblioteka extends  JFrame{
         int width = 800, height = 600;
         this.setSize(width, height);
         setLocationRelativeTo(null);
+
         closeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
+            }
+        });
+        wsteczButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+
+                Dashboard dashboard = new Dashboard();
+                dashboard.setVisible(true);
             }
         });
     }

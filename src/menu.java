@@ -4,7 +4,7 @@ import java.awt.event.ActionListener;
 
 public class menu extends JFrame{
     private JPanel JPanel1;
-    private JButton kalkulatorButton;
+    private JButton logowanieButton;
     private JButton rejestracjaButton;
     private JButton wyjścieButton;
 
@@ -28,13 +28,25 @@ public class menu extends JFrame{
             }
         });
 
-        kalkulatorButton.addActionListener(new ActionListener() {
+
+        logowanieButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                dispose();
 
+                LoginForm loginForm = new LoginForm();
+                loginForm.setVisible(true);
             }
         });
+        rejestracjaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
 
+                Register register = new Register();
+                register.setVisible(true);
+            }
+        });
     }
 
 

@@ -17,45 +17,46 @@ public class LoginForm extends JDialog{
     private JPanel Password;
 
     public static void main(String[] args) {
-        LoginForm loginForm = new LoginForm(null);
+        LoginForm loginForm = new LoginForm();
         loginForm.setVisible(true);
 
         User user = loginForm.user;
         if (user != null){
-            System.out.println("Successful Authentication of " + user.name);
-            System.out.println("\t\tEmail: " + user.email);
-            System.out.println("\t\tPhone: " + user.phone);
-            System.out.println("\t\tAddress: " + user.address);
+            System.out.println("Udana autoryzacja użytkownika: " + user.name);
+//            System.out.println("\t\tEmail: " + user.email);
+//            System.out.println("\t\tPhone: " + user.phone);
+//            System.out.println("\t\tAddress: " + user.address);
         }else{
-            System.out.println("Authentication canceled");
+            System.out.println("Logowanie przerwane!");
         }
     }
 
-    LoginForm(JFrame parent){
-        super(parent);
-        setTitle("Login form");
+    LoginForm(){
+        //super(parent);
+        setTitle("Logowanie");
         this.setContentPane(JPanel1);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         int width = 800, height = 600;
         setModal(true);
         setMinimumSize(new Dimension(width, height));
-        setLocationRelativeTo(parent);
+        //setLocationRelativeTo(parent);
+        setLocationRelativeTo(null);
 
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String email = tfEmail.getText();
+                //String email = tfEmail.getText();
                 String password = String.valueOf(tfPassword.getPassword());
 
-                user = getAutenticateUer(email, password);
+                user = getAutenticateUer(password);
 
                 if (user != null){
                     dispose();
-                    Dashboard dashboard = new Dashboard(null);
+                    Dashboard dashboard = new Dashboard();
                     dashboard.setVisible(true);
                 }else{
                     JOptionPane.showMessageDialog(LoginForm.this,
-                            "Email or password invalid",
+                            "Niepoprawny adres email lub hasło",
                             "Try again",
                             JOptionPane.ERROR_MESSAGE);
                 }
@@ -73,7 +74,7 @@ public class LoginForm extends JDialog{
     }
 
     public User user;
-    private User getAutenticateUer(String email, String password) {
+    private User getAutenticateUer(String password) {
         User user = null;
 
         final String DB_URL = "jdbc:mysql://localhost/MyStore?serverTimezone=UTC";
@@ -83,18 +84,14 @@ public class LoginForm extends JDialog{
         try{
             Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
             Statement stmt = conn.createStatement();
-            String sql = "SELECT * FROM users WHERE email=? AND password=?";
+            String sql = "SELECT * FROM users WHERE password=?";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1, email);
-            preparedStatement.setString(2, password);
+            preparedStatement.setString(1, password);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
                 user = new User();
                 user.name = resultSet.getString("name");
-                user.email = resultSet.getString("email");
-                user.phone = resultSet.getString("phone");
-                user.address = resultSet.getString("address");
                 user.password = resultSet.getString("password");
             }
             stmt.close();
