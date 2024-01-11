@@ -2,6 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Dashboard extends JDialog{
@@ -13,12 +16,14 @@ public class Dashboard extends JDialog{
     private JTable table1;
     private JLabel jDane;
 
-    public static void main(String[] args) {
+    public User user;
+    public static void main(String[] args) throws SQLException {
         Dashboard dashboard = new Dashboard();
         dashboard.setVisible(true);
+
     }
 
-    public Dashboard(){
+    public Dashboard() throws SQLException {
         setTitle("Menu ksiegarni");
         this.setContentPane(JPanel1);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -26,6 +31,21 @@ public class Dashboard extends JDialog{
         setModal(true);
         setMinimumSize(new Dimension(width, height));
         setLocationRelativeTo(null);
+
+        Connection connection = Database.getConnection();
+        try{
+            String sql = "SELECT * FROM users WHERE id=" + user.getId();
+            PreparedStatement pst = connection.prepareStatement(sql);
+            ResultSet rst = pst.executeQuery();
+            rst.next();
+
+            jDane.setText("Zalogowany jako: " + user.getName() + " " + user.getSurname());
+        }catch (Exception e){
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        // pokaz ksiazki aktualnego zalogowanego
+
 
         closeButton.addActionListener(new ActionListener() {
             @Override

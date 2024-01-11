@@ -59,7 +59,12 @@ public class Biblioteka extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 dispose();
 
-                Dashboard dashboard = new Dashboard();
+                Dashboard dashboard = null;
+                try {
+                    dashboard = new Dashboard();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
                 dashboard.setVisible(true);
             }
         });

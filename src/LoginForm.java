@@ -22,10 +22,7 @@ public class LoginForm extends JFrame{
 
         User user = loginForm.user;
         if (user != null){
-            System.out.println("Udana autoryzacja użytkownika: " + user.name);
-//            System.out.println("\t\tEmail: " + user.email);
-//            System.out.println("\t\tPhone: " + user.phone);
-//            System.out.println("\t\tAddress: " + user.address);
+            System.out.println("Udana autoryzacja użytkownika: " + user.name + " " + user.surname);
         }else{
             System.out.println("Logowanie przerwane!");
         }
@@ -42,13 +39,13 @@ public class LoginForm extends JFrame{
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //String email = tfEmail.getText();
+                String mail = tfEmail.getText();
                 String password = String.valueOf(tfPassword.getPassword());
 
-                user = getAutenticateUer(password);
+                user = getAutenticateUser(mail, password);
 
                 if (user != null){
-                    if (user.name.equals("root") && user.password.equals("root")){
+                    if (user.mail.equals("root") && user.password.equals("root")){
                         dispose();
                         try {
                             AdminDashboard adminDashboard = new AdminDashboard();
@@ -58,8 +55,14 @@ public class LoginForm extends JFrame{
                         }
                     }else{
                         dispose();
-                        Dashboard dashboard = new Dashboard();
-                        dashboard.setVisible(true);
+                        Dashboard dashboard = null;
+                        try {
+                            dashboard = new Dashboard();
+                            dashboard.setVisible(true);
+                        } catch (SQLException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        System.out.println("Zalogowano jako: " + user.name + " " + user.surname);
                     }
                 }else{
                     JOptionPane.showMessageDialog(LoginForm.this,
@@ -81,7 +84,7 @@ public class LoginForm extends JFrame{
     }
 
     public User user;
-    private User getAutenticateUer(String password) {
+    private User getAutenticateUser(String mail, String password) {
         User user = null;
 
         final String DB_URL = "jdbc:mysql://localhost/MyStore?serverTimezone=UTC";
@@ -91,15 +94,18 @@ public class LoginForm extends JFrame{
         try{
             Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
             Statement stmt = conn.createStatement();
-            String sql = "SELECT * FROM users WHERE password=?";
+            String sql = "SELECT * FROM users WHERE mail=? AND password=?";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1, password);
+            preparedStatement.setString(1, mail);
+            preparedStatement.setString(2, password);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
                 user = new User();
-                user.name = resultSet.getString("name");
+                user.mail = resultSet.getString("mail");
                 user.password = resultSet.getString("password");
+                user.id = resultSet.getString("id");
+                user.setId(user.id);
             }
             stmt.close();
             conn.close();
