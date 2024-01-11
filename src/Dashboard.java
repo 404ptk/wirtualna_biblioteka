@@ -1,5 +1,6 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,6 +19,7 @@ public class Dashboard extends JDialog{
     private JPanel close;
     private JTable table1;
     private JLabel jDane;
+    private JButton jOddaj;
 
     public static User user;
 
@@ -45,6 +47,18 @@ public class Dashboard extends JDialog{
             PreparedStatement pst = connection.prepareStatement(sql);
             ResultSet rst = pst.executeQuery();
             rst.next();
+
+            DefaultTableModel model = new DefaultTableModel(new String[]{
+                    "Nazwa książki",
+                    "Autor",
+                    "Data wypożyczenia",
+                    "Data oddania"
+            }, 0);
+//            while(rst.next()){
+//                model.addRow(new String[]{
+//                        rst.getString("id")
+//                });
+//            }
 
             jDane.setText("Zalogowany jako: " + user.getName() + " " + user.getSurname());
         }catch (Exception e){
@@ -74,6 +88,12 @@ public class Dashboard extends JDialog{
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
+
+            }
+        });
+        jOddaj.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
             }
         });

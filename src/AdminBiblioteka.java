@@ -111,7 +111,6 @@ public class AdminBiblioteka extends JFrame{
 
                     updateTable();
                     JOptionPane.showMessageDialog(null, "Usunięto.");
-                    System.out.println("Usunięto książkę ");
 
 
                 } catch (SQLException ex) {

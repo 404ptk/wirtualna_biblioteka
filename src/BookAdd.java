@@ -20,15 +20,17 @@ public class BookAdd extends JFrame{
     private JButton jWyjdz;
     private JPanel JBookAdd;
 
+    public BookA book;
+
     public static void main(String[] args) throws SQLException {
         BookAdd bookAdd = new BookAdd();
         bookAdd.setVisible(true);
         BookA book = bookAdd.book;
-        if (book != null){
-            System.out.println("Dodano książke: " + book.book_name);
-        }else{
-            System.out.println("Przerwano dodawanie książki.");
-        }
+//        if (book != null){
+//            System.out.println("Dodano książke: " + book.book_name);
+//        }else{
+//            System.out.println("Przerwano dodawanie książki.");
+//        }
     }
 
     public BookAdd() throws SQLException {
@@ -50,7 +52,6 @@ public class BookAdd extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 addBook();
-                System.out.println("Dodano ksiazke");
                 dispose();
 
                 AdminBiblioteka adminBiblioteka = null;
@@ -81,9 +82,6 @@ public class BookAdd extends JFrame{
                             "Spróbuj ponownie");
             return;
         }
-        if (book_amount == 0){
-            book_amount = 1;
-        }
 
         book = addBookToDatabase(book_name, book_author, book_amount);
         if (book != null){
@@ -96,7 +94,6 @@ public class BookAdd extends JFrame{
 
     }
 
-    public BookA book;
     private BookA addBookToDatabase(String book_name, String book_author, int book_amount){
         BookA book = null;
 
@@ -115,6 +112,11 @@ public class BookAdd extends JFrame{
                 book.book_author = book_author;
                 book.book_amount = book_amount;
             }
+            System.out.println("Dodano ksiażkę:" +
+                    "\nNazwa: " + book_name +
+                    "\nAutor: " + book_author +
+                    "\nIlość sztuk: " + book_amount
+                    );
             connection.close();
 
         } catch (SQLException e) {
