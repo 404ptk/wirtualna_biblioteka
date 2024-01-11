@@ -14,12 +14,14 @@ public class Register extends JDialog{
     private JPanel JPanel1;
     private JPanel TextFields;
     private JPanel Buttons;
-    private JTextField tfName;
+    private JTextField tfImie;
     private JPasswordField JPassword;
     private JButton cancelButton;
     private JButton registerButton;
     private JPanel JPasswor;
     private JPasswordField JPasswordConfirm;
+    private JTextField tfNazwisko;
+    private JTextField tfMail;
 
     public static void main(String[] args) {
         Register myForm = new Register();
@@ -33,13 +35,11 @@ public class Register extends JDialog{
     }
 
     public Register(){
-        //super(parent);
-        setTitle("Stwórz konto");
+        setTitle("Rejestracja");
         setContentPane(JPanel1);
         int width = 400, height = 500;
         setMinimumSize(new Dimension(width, height));
         setModal(true);
-        //setLocationRelativeTo(parent);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -68,14 +68,13 @@ public class Register extends JDialog{
     }
 
     private void registerUser() {
-        String name = tfName.getText();
-//        String email = tfEmail.getText();
-//        String phone = tfPhone.getText();
-//        String address = tfAddress.getText();
+        String name = tfImie.getText();
+        String surname = tfNazwisko.getText();
+        String mail = tfMail.getText();
         String password = String.valueOf(JPassword.getPassword());
         String confirmpassword = String.valueOf(JPasswordConfirm.getPassword());
 
-        if (name.isEmpty() || password.isEmpty()){
+        if (name.isEmpty() || surname.isEmpty() || mail.isEmpty() || password.isEmpty() || confirmpassword.isEmpty()){
             JOptionPane.showMessageDialog(this,
                     "Uzupełnij wszystkie pola",
                     "Spróbuj ponownie",
@@ -90,7 +89,7 @@ public class Register extends JDialog{
             return;
         }
 
-        user = addUserToDatabase(name, password);
+        user = addUserToDatabase(name, surname, mail, password);
         if (user != null){
             dispose();
         }else{
@@ -102,7 +101,7 @@ public class Register extends JDialog{
     }
 
     public User user;
-    private User addUserToDatabase(String name, String password) {
+    private User addUserToDatabase(String name, String surname, String mail, String password) {
         User user = null;
 
         // sprawdzenie polaczenia do bazy danych
@@ -113,16 +112,20 @@ public class Register extends JDialog{
         try{
             Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
             Statement stmt = conn.createStatement();
-            String sql = "INSERT INTO users (name, password) VALUES (?,?)";
+            String sql = "INSERT INTO users (name, surname, mail, password) VALUES (?,?,?,?)";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, name);
-            preparedStatement.setString(2, password);
+            preparedStatement.setString(2, surname);
+            preparedStatement.setString(3, mail);
+            preparedStatement.setString(4, password);
 
             //insert row into the table
             int addedRows = preparedStatement.executeUpdate();
             if (addedRows > 0){
                 user = new User();
                 user.name = name;
+                user.surname = surname;
+                user.mail = mail;
                 user.password = password;
             }
             //close connection

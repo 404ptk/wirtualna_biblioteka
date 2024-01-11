@@ -14,8 +14,8 @@ public class AdminDashboard extends JFrame{
     private JButton closeButton;
     private JButton ksiazkiButton;
     private JButton usunButton;
-    private JButton zmienosobeButton;
     private JButton oddajButton;
+    private JLabel jOsoba;
 
     public static void main(String[] args) throws SQLException {
         AdminDashboard admindashboard = new AdminDashboard();
@@ -23,12 +23,26 @@ public class AdminDashboard extends JFrame{
     }
 
     public AdminDashboard() throws SQLException {
-        setTitle("Dashboard");
+        setTitle("Panel administracyjny");
         this.setContentPane(JPanel1);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         int width = 800, height = 600;
         setMinimumSize(new Dimension(width, height));
         setLocationRelativeTo(null);
+
+        Connection connection = Database.getConnection();
+        String sql = "SELECT * FROM users";
+        try{
+            PreparedStatement pst = connection.prepareStatement(sql);
+            ResultSet rst = pst.executeQuery();
+            rst.next();
+
+            String imie = rst.getString("name");
+            String nazwisko = rst.getString("surname");
+            jOsoba.setText("Zalogowany jako: " + imie + " " + nazwisko);
+        }catch (Exception e){
+            System.out.println("Error: " + e.getMessage());
+        }
 
         closeButton.addActionListener(new ActionListener() {
             @Override
@@ -40,33 +54,36 @@ public class AdminDashboard extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                AdminBiblioteka adminBiblioteka = new AdminBiblioteka();
+                AdminBiblioteka adminBiblioteka = null;
+                try {
+                    adminBiblioteka = new AdminBiblioteka();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
                 adminBiblioteka.setVisible(true);
             }
         });
 
-        Connection connection = Database.getConnection();
-
-        String zapytanie = "SELECT * FROM users";
         try{
-            PreparedStatement ps = connection.prepareStatement(zapytanie);
+            PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             DefaultTableModel model = new DefaultTableModel(new String[]{
-                    "Nazwa użytkownika",
-                    "Hasło"
+                    "Imię i nazwisko",
+                    "Mail",
+                    "Wypożyczone książki"
             }, 0);
 
             while(rs.next()){
                 model.addRow(new String[]{
                         rs.getString("name"),
-                        rs.getString("password")
+                        rs.getString("mail"),
+                        rs.getString("books")
                 });
             }
             table1.setModel(model);
         }catch(Exception ex){
             System.out.println("Error: " + ex.getMessage());
         }
-        //String zapytanie = "SELECT * FROM "
     }
 }
 
