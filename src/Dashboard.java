@@ -88,7 +88,7 @@ public class Dashboard extends JDialog{
 
                 Biblioteka biblioteka = null;
                 try {
-                    biblioteka = new Biblioteka();
+                    biblioteka = new Biblioteka(user);
                     biblioteka.setVisible(true);
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);

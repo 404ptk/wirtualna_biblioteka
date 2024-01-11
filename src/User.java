@@ -4,6 +4,7 @@ public class User {
     public String mail;
     public String password;
     public int id;
+    public String owned_books;
 
     public User(){
 
@@ -54,5 +55,13 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getOwned_books() {
+        return owned_books;
+    }
+
+    public void setOwned_books(String owned_books) {
+        this.owned_books = owned_books;
     }
 }

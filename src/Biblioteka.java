@@ -13,23 +13,34 @@ import java.sql.SQLException;
 public class Biblioteka extends JFrame{
     private JPanel JPanel1;
     private JTable table1;
-    private JButton wypozyczButton;
     private JButton closeButton;
     private JButton wsteczButton;
-    public User user;
+    private JPanel JKsiazki;
+    private JButton wypozyczButton;
+    private JButton oddajButton;
+    private JLabel jDane;
+    private JLabel jDane2;
+    private JLabel jDane3;
+    public static User user;
+    public BookA book;
 
     public static void main(String[] args) throws SQLException {
-        Biblioteka biblioteka = new Biblioteka();
+        Biblioteka biblioteka = new Biblioteka(user);
         biblioteka.setVisible(true);
     }
 
-    public Biblioteka() throws SQLException {
-        super("Dostępne książki");
+    public Biblioteka(User user) throws SQLException {
+        Biblioteka.user = user;
+        setTitle("Dostępne książki");
         this.setContentPane(this.JPanel1);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         int width = 800, height = 600;
         this.setSize(width, height);
         setLocationRelativeTo(null);
+
+        jDane.setText("Zalogowany jako:");
+        jDane2.setText(user.getName() + " " + user.getSurname());
+        jDane3.setText(user.getMail());
 
         try {
             setIconImage(ImageIO.read(new File("src/icon.png")));
@@ -76,6 +87,23 @@ public class Biblioteka extends JFrame{
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
+
+            }
+        });
+        wypozyczButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int row = table1.getSelectedRow();
+                String cell = table1.getModel().getValueAt(row,0).toString();
+                String sql = "SELECT FROM book WHERE id=" + cell
+                        + " book_amount - 1";
+
+
+            }
+        });
+        oddajButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
             }
         });

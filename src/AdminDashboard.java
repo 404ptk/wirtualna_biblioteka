@@ -86,7 +86,7 @@ public class AdminDashboard extends JFrame{
 
             while(rs.next()){
                 model.addRow(new String[]{
-                        rs.getString("name"),
+                        rs.getString("name") + " " + rs.getString("surname"),
                         rs.getString("mail"),
                         rs.getString("books")
                 });
