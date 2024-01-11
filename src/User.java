@@ -3,7 +3,18 @@ public class User {
     public String surname;
     public String mail;
     public String password;
-    public String id;
+    public int id;
+
+    public User(){
+
+    }
+    public User(String name, String surname, String mail, String password, int id){
+        setName(name);
+        setSurname(surname);
+        setMail(mail);
+        setPassword(password);
+        setId(id);
+    }
 
     public String getName() {
         return name;
@@ -37,11 +48,11 @@ public class User {
         this.password = password;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 }

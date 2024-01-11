@@ -1,8 +1,11 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.sql.*;
 
 public class AdminDashboard extends JFrame{
@@ -29,6 +32,12 @@ public class AdminDashboard extends JFrame{
         int width = 800, height = 600;
         setMinimumSize(new Dimension(width, height));
         setLocationRelativeTo(null);
+
+        try {
+            setIconImage(ImageIO.read(new File("src/icon.png")));
+        } catch (IOException | IllegalArgumentException e) {
+            System.out.println("Wystąpił błąd przy wczytywaniu ur.png.");
+        }
 
         Connection connection = Database.getConnection();
         String sql = "SELECT * FROM users";

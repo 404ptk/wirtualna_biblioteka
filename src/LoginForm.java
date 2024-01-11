@@ -1,8 +1,11 @@
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.sql.*;
 
 public class LoginForm extends JFrame{
@@ -36,6 +39,12 @@ public class LoginForm extends JFrame{
         setMinimumSize(new Dimension(width, height));
         setLocationRelativeTo(null);
 
+        try {
+            setIconImage(ImageIO.read(new File("src/icon.png")));
+        } catch (IOException | IllegalArgumentException e) {
+            System.out.println("Wystąpił błąd przy wczytywaniu ur.png.");
+        }
+
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -57,7 +66,7 @@ public class LoginForm extends JFrame{
                         dispose();
                         Dashboard dashboard = null;
                         try {
-                            dashboard = new Dashboard();
+                            dashboard = new Dashboard(user);
                             dashboard.setVisible(true);
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
@@ -81,6 +90,7 @@ public class LoginForm extends JFrame{
             }
         });
 
+        getRootPane().setDefaultButton(okButton);
     }
 
     public User user;
@@ -101,11 +111,16 @@ public class LoginForm extends JFrame{
 
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
-                user = new User();
-                user.mail = resultSet.getString("mail");
-                user.password = resultSet.getString("password");
-                user.id = resultSet.getString("id");
-                user.setId(user.id);
+                user = new User(
+                        resultSet.getString("name"),
+                        resultSet.getString("surname"),
+                        resultSet.getString("mail"),
+                        resultSet.getString("password"),
+                        resultSet.getInt("id")
+                );
+//                user.mail = resultSet.getString("mail");
+//                user.password = resultSet.getString("password");
+//                user.id = resultSet.getString("id");
             }
             stmt.close();
             conn.close();

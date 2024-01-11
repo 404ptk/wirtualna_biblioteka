@@ -1,7 +1,10 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -36,20 +39,28 @@ public class BookAdd extends JFrame{
         setMinimumSize(new Dimension(width, height));
         setLocationRelativeTo(null);
 
+        try {
+            setIconImage(ImageIO.read(new File("src/icon.png")));
+        } catch (IOException | IllegalArgumentException e) {
+            System.out.println("Wystąpił błąd przy wczytywaniu ur.png.");
+        }
+
 
         jDodaj.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 addBook();
+                System.out.println("Dodano ksiazke");
                 dispose();
 
                 AdminBiblioteka adminBiblioteka = null;
                 try {
                     adminBiblioteka = new AdminBiblioteka();
+                    adminBiblioteka.setVisible(true);
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
-                adminBiblioteka.setVisible(true);
+
             }
         });
         jWyjdz.addActionListener(new ActionListener() {

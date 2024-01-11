@@ -1,7 +1,10 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +16,7 @@ public class Biblioteka extends JFrame{
     private JButton wypozyczButton;
     private JButton closeButton;
     private JButton wsteczButton;
+    public User user;
 
     public static void main(String[] args) throws SQLException {
         Biblioteka biblioteka = new Biblioteka();
@@ -26,6 +30,12 @@ public class Biblioteka extends JFrame{
         int width = 800, height = 600;
         this.setSize(width, height);
         setLocationRelativeTo(null);
+
+        try {
+            setIconImage(ImageIO.read(new File("src/icon.png")));
+        } catch (IOException | IllegalArgumentException e) {
+            System.out.println("Wystąpił błąd przy wczytywaniu ur.png.");
+        }
 
         Connection connection = Database.getConnection();
         String sql = "SELECT * FROM book";
@@ -61,11 +71,12 @@ public class Biblioteka extends JFrame{
 
                 Dashboard dashboard = null;
                 try {
-                    dashboard = new Dashboard();
+                    dashboard = new Dashboard(user);
+                    dashboard.setVisible(true);
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
-                dashboard.setVisible(true);
+
             }
         });
     }

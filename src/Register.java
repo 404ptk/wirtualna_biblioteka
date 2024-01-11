@@ -65,6 +65,7 @@ public class Register extends JDialog{
                 dispose();
             }
         });
+        getRootPane().setDefaultButton(registerButton);
     }
 
     private void registerUser() {
