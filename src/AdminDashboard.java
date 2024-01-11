@@ -10,14 +10,16 @@ import java.sql.*;
 
 public class AdminDashboard extends JFrame{
     private JPanel JPanel1;
-    private JButton wypozyczButton;
-    private JButton edytujButton;
     private JTable table1;
-    private JPanel close;
     private JButton closeButton;
+    private JButton edytujButton;
+    private JButton jOddaj;
+    private JPanel close;
+    private JLabel jDane;
+    private JLabel jDane2;
+    private JLabel jDane3;
     private JButton ksiazkiButton;
-    private JButton usunButton;
-    private JButton oddajButton;
+    private JButton wylogujButton;
     private JLabel jOsoba;
 
     public static void main(String[] args) throws SQLException {
@@ -46,9 +48,8 @@ public class AdminDashboard extends JFrame{
             ResultSet rst = pst.executeQuery();
             rst.next();
 
-            String imie = rst.getString("name");
-            String nazwisko = rst.getString("surname");
-            jOsoba.setText("Zalogowany jako: " + imie + " " + nazwisko);
+            jDane.setText("Zalogowany jako: ");
+            jDane2.setText("Administrator");
         }catch (Exception e){
             System.out.println("Error: " + e.getMessage());
         }
@@ -79,7 +80,8 @@ public class AdminDashboard extends JFrame{
             DefaultTableModel model = new DefaultTableModel(new String[]{
                     "Imię i nazwisko",
                     "Mail",
-                    "Wypożyczone książki"
+                    "Wypożyczone książki",
+                    "Zalegające książki"
             }, 0);
 
             while(rs.next()){
@@ -93,6 +95,14 @@ public class AdminDashboard extends JFrame{
         }catch(Exception ex){
             System.out.println("Error: " + ex.getMessage());
         }
+        wylogujButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                menu Menu = new menu();
+                Menu.setVisible(true);
+            }
+        });
     }
 }
 

@@ -87,6 +87,8 @@ public class LoginForm extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
+                menu Menu = new menu();
+                Menu.setVisible(true);
             }
         });
 

@@ -20,6 +20,9 @@ public class Dashboard extends JDialog{
     private JTable table1;
     private JLabel jDane;
     private JButton jOddaj;
+    private JLabel jDane2;
+    private JLabel jDane3;
+    private JButton wylogujButton;
 
     public static User user;
 
@@ -60,7 +63,9 @@ public class Dashboard extends JDialog{
 //                });
 //            }
 
-            jDane.setText("Zalogowany jako: " + user.getName() + " " + user.getSurname());
+            jDane.setText("Zalogowany jako:");
+            jDane2.setText(user.getName() + " " + user.getSurname());
+            jDane3.setText(user.getMail());
         }catch (Exception e){
             System.out.println("Error: " + e.getMessage());
         }
@@ -95,6 +100,14 @@ public class Dashboard extends JDialog{
             @Override
             public void actionPerformed(ActionEvent e) {
 
+            }
+        });
+        wylogujButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                menu Menu = new menu();
+                Menu.setVisible(true);
             }
         });
     }

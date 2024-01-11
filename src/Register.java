@@ -10,7 +10,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 
-public class Register extends JDialog{
+public class Register extends JFrame{
     private JPanel JPanel1;
     private JPanel TextFields;
     private JPanel Buttons;
@@ -36,12 +36,11 @@ public class Register extends JDialog{
 
     public Register(){
         setTitle("Rejestracja");
-        setContentPane(JPanel1);
-        int width = 400, height = 500;
+        this.setContentPane(this.JPanel1);
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        int width = 800, height = 600;
         setMinimumSize(new Dimension(width, height));
-        setModal(true);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         try {
             setIconImage(ImageIO.read(new File("src/icon.png")));
@@ -63,6 +62,8 @@ public class Register extends JDialog{
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
+                menu Menu = new menu();
+                Menu.setVisible(true);
             }
         });
         getRootPane().setDefaultButton(registerButton);
