@@ -70,6 +70,18 @@ public class BookAdd extends JFrame{
                 dispose();
             }
         });
+        wsteczButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                try {
+                    AdminBiblioteka adminBiblioteka = new AdminBiblioteka();
+                    adminBiblioteka.setVisible(true);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
     }
     private void addBook(){
         String book_name = tfBookName.getText();
@@ -125,6 +137,7 @@ public class BookAdd extends JFrame{
 
         return book;
     }
+
 }
 
 

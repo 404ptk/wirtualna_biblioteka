@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 
-public class LoginForm extends JFrame{
+public class LoginForm extends JDialog{
     private JPanel JPanel1;
     private JPanel Buttons;
     private JPanel Login;
@@ -66,12 +66,12 @@ public class LoginForm extends JFrame{
                         dispose();
                         Dashboard dashboard = null;
                         try {
+                            System.out.println("Zalogowano jako: " + user.name + " " + user.surname);
                             dashboard = new Dashboard(user);
                             dashboard.setVisible(true);
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
                         }
-                        System.out.println("Zalogowano jako: " + user.name + " " + user.surname);
                     }
                 }else{
                     JOptionPane.showMessageDialog(LoginForm.this,
@@ -120,9 +120,6 @@ public class LoginForm extends JFrame{
                         resultSet.getString("password"),
                         resultSet.getInt("id")
                 );
-//                user.mail = resultSet.getString("mail");
-//                user.password = resultSet.getString("password");
-//                user.id = resultSet.getString("id");
             }
             stmt.close();
             conn.close();

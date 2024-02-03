@@ -109,7 +109,7 @@
               <focusPainted value="false"/>
               <font size="16" style="1"/>
               <foreground color="-16777216"/>
-              <text value="Ok"/>
+              <text value="Zaloguj"/>
             </properties>
           </component>
           <component id="58079" class="javax.swing.JButton" binding="cancelButton" default-binding="true">
@@ -123,7 +123,7 @@
               <font size="16" style="1"/>
               <foreground color="-16777216"/>
               <hideActionText value="false"/>
-              <text value="Cancel"/>
+              <text value="Powrót"/>
             </properties>
           </component>
           <vspacer id="6cbd0">

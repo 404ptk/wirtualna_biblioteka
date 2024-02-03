@@ -54,12 +54,14 @@ public class Biblioteka extends JFrame{
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             DefaultTableModel model = new DefaultTableModel(new String[]{
+                    "Id",
                     "Nazwa książki",
                     "Autor",
                     "Ilość książek"
             }, 0);
             while(rs.next()){
                 model.addRow(new String[]{
+                        rs.getString("id"),
                         rs.getString("book_name"),
                         rs.getString("book_author"),
                         rs.getString("book_amount")
@@ -94,17 +96,27 @@ public class Biblioteka extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 int row = table1.getSelectedRow();
-                String cell = table1.getModel().getValueAt(row,0).toString();
-                String sql = "SELECT FROM book WHERE id=" + cell
-                        + " book_amount - 1";
+                String cell = table1.getModel().getValueAt(row, 0).toString();
+                int bookId = Integer.parseInt(cell);
 
+                String rentSql = "INSERT INTO rent (user_id, book_id, rent_date, return_date) VALUES (?, ?, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 14 DAY))";
+                String updateBookSql = "UPDATE book SET book_amount = book_amount - 1 WHERE id = ?";
 
-            }
-        });
-        oddajButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+                try (Connection conn = Database.getConnection();
+                     PreparedStatement rentStatement = conn.prepareStatement(rentSql);
+                     PreparedStatement updateBookStatement = conn.prepareStatement(updateBookSql)) {
 
+                    rentStatement.setInt(1, user.getId());
+                    rentStatement.setInt(2, bookId);
+                    rentStatement.executeUpdate();
+
+                    updateBookStatement.setInt(1, bookId);
+                    updateBookStatement.executeUpdate();
+
+                    JOptionPane.showMessageDialog(null, "Wypożyczono książkę");
+                } catch (SQLException ex) {
+                    System.out.println("Error: " + ex.getMessage());
+                }
             }
         });
     }

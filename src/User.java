@@ -5,6 +5,7 @@ public class User {
     public String password;
     public int id;
     public String owned_books;
+    private String user_type;
 
     public User(){
 

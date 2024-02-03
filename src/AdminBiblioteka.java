@@ -1,9 +1,13 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import javax.swing.text.Utilities;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.print.Book;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -18,6 +22,8 @@ public class AdminBiblioteka extends JFrame{
     private JButton wsteczButton;
     private JButton jDodaj;
     private JButton jUsun;
+    public BookA book;
+    public static User user;
 
     public static void main(String[] args) throws SQLException {
         AdminBiblioteka adminBiblioteka = new AdminBiblioteka();
@@ -58,6 +64,7 @@ public class AdminBiblioteka extends JFrame{
                 });
             }
             table1.setModel(model);
+            centerTextInColumns(table1);
         }catch(Exception e){
             System.out.println("Error: " + e.getMessage());
         }
@@ -110,7 +117,7 @@ public class AdminBiblioteka extends JFrame{
                     ps.execute();
 
                     updateTable();
-                    JOptionPane.showMessageDialog(null, "Usunięto.");
+                    JOptionPane.showMessageDialog(null, "Usunięto książkę ");
 
 
                 } catch (SQLException ex) {
@@ -124,25 +131,47 @@ public class AdminBiblioteka extends JFrame{
 //                    }
 //                }
             }
+
         });
 
     }
-    private void updateTable(){
+    public static void centerTextInColumns(JTable table1) {
+        TableColumnModel columns = table1.getColumnModel();
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+        renderer.setHorizontalAlignment(JLabel.CENTER);
+
+        for (int i = 0; i < columns.getColumnCount(); i++) {
+            columns.getColumn(i).setCellRenderer(renderer);
+        }
+    }
+    public void updateTable() {
         String sql = "SELECT * FROM book";
-        try{
+        try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
+
+            DefaultTableModel model = new DefaultTableModel(new String[]{
+                    "Id",
+                    "Nazwa książki",
+                    "Autor",
+                    "Ilość książek"
+            }, 0);
+
+            while (rs.next()) {
+                model.addRow(new String[]{
+                        rs.getString("id"),
+                        rs.getString("book_name"),
+                        rs.getString("book_author"),
+                        rs.getString("book_amount")
+                });
+            }
+
+            table1.setModel(model);
+            centerTextInColumns(table1);
 
         } catch (SQLException e) {
             System.out.println("Error: " + e);
         }
-//        finally {
-//            try{
-//
-//            }catch (Exception e){
-//
-//            }
-//        }
     }
 }
 

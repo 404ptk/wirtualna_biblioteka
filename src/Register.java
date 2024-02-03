@@ -52,10 +52,6 @@ public class Register extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 registerUser();
-                dispose();
-
-                LoginForm loginForm = new LoginForm();
-                loginForm.setVisible(true);
             }
         });
         cancelButton.addActionListener(new ActionListener() {
@@ -94,6 +90,9 @@ public class Register extends JFrame{
         user = addUserToDatabase(name, surname, mail, password);
         if (user != null){
             dispose();
+            System.out.println("Poprawnie zarejestrowano użytkownika.");
+            LoginForm loginForm = new LoginForm();
+            loginForm.setVisible(true);
         }else{
             JOptionPane.showMessageDialog(this,
                     "Niepowodzenie w rejestracji użytkownika",
