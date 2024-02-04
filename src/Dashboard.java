@@ -39,7 +39,7 @@ public class Dashboard extends JFrame{
         try {
             setIconImage(ImageIO.read(new File("src/icon.png")));
         } catch (IOException | IllegalArgumentException e) {
-            System.out.println("Wystąpił błąd przy wczytywaniu ur.png.");
+            System.out.println("Wystąpił błąd przy wczytywaniu icon.png.");
         }
 
         Connection connection = Database.getConnection();
@@ -92,7 +92,6 @@ public class Dashboard extends JFrame{
 
                     if (result == JOptionPane.YES_OPTION) {
                         try {
-                            // Pobierz dane książki na podstawie nazwy z uwzględnieniem różnicy w wielkości liter
                             String selectBookSql = "SELECT * FROM book WHERE LOWER(book_name) = LOWER(?)";
                             PreparedStatement selectBookStatement = connection.prepareStatement(selectBookSql);
                             selectBookStatement.setString(1, bookName);
@@ -108,7 +107,6 @@ public class Dashboard extends JFrame{
                                 deleteStatement.setInt(2, bookId);
                                 deleteStatement.executeUpdate();
 
-                                // Odśwież tabelę po oddaniu książki
                                 refreshTable();
 
                                 JOptionPane.showMessageDialog(null, "Książka: " + bookName + " została zwrócona.");

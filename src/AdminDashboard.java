@@ -44,7 +44,7 @@ public class AdminDashboard extends JFrame{
         try {
             setIconImage(ImageIO.read(new File("src/icon.png")));
         } catch (IOException | IllegalArgumentException e) {
-            System.out.println("Wystąpił błąd przy wczytywaniu ur.png.");
+            System.out.println("Wystąpił błąd przy wczytywaniu icon.png.");
         }
 
         Connection connection = Database.getConnection();

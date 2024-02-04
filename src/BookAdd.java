@@ -26,11 +26,11 @@ public class BookAdd extends JFrame{
         BookAdd bookAdd = new BookAdd();
         bookAdd.setVisible(true);
         BookA book = bookAdd.book;
-//        if (book != null){
-//            System.out.println("Dodano książke: " + book.book_name);
-//        }else{
-//            System.out.println("Przerwano dodawanie książki.");
-//        }
+        if (book != null){
+            System.out.println("Dodano książke: " + book.book_name);
+        }else{
+            System.out.println("Przerwano dodawanie książki.");
+        }
     }
 
     public BookAdd() throws SQLException {
@@ -44,7 +44,7 @@ public class BookAdd extends JFrame{
         try {
             setIconImage(ImageIO.read(new File("src/icon.png")));
         } catch (IOException | IllegalArgumentException e) {
-            System.out.println("Wystąpił błąd przy wczytywaniu ur.png.");
+            System.out.println("Wystąpił błąd przy wczytywaniu icon.png.");
         }
 
 
