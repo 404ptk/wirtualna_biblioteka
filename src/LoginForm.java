@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 
-public class LoginForm extends JDialog{
+public class LoginForm extends JFrame{
     private JPanel JPanel1;
     private JPanel Buttons;
     private JPanel Login;
