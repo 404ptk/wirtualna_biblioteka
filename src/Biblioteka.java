@@ -9,8 +9,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
-public class Biblioteka extends JFrame{
+public class Biblioteka extends JFrame {
     private JPanel JPanel1;
     private JTable table1;
     private JButton closeButton;
@@ -22,7 +23,6 @@ public class Biblioteka extends JFrame{
     private JLabel jDane2;
     private JLabel jDane3;
     public static User user;
-    public BookA book;
 
     public static void main(String[] args) throws SQLException {
         Biblioteka biblioteka = new Biblioteka(user);
@@ -50,7 +50,7 @@ public class Biblioteka extends JFrame{
 
         Connection connection = Database.getConnection();
         String sql = "SELECT * FROM book";
-        try{
+        try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             DefaultTableModel model = new DefaultTableModel(new String[]{
@@ -59,7 +59,7 @@ public class Biblioteka extends JFrame{
                     "Autor",
                     "Ilość książek"
             }, 0);
-            while(rs.next()){
+            while (rs.next()) {
                 model.addRow(new String[]{
                         rs.getString("id"),
                         rs.getString("book_name"),
@@ -68,7 +68,7 @@ public class Biblioteka extends JFrame{
                 });
             }
             table1.setModel(model);
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
         closeButton.addActionListener(new ActionListener() {
@@ -101,10 +101,12 @@ public class Biblioteka extends JFrame{
 
                 String rentSql = "INSERT INTO rent (user_id, book_id, rent_date, return_date) VALUES (?, ?, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 14 DAY))";
                 String updateBookSql = "UPDATE book SET book_amount = book_amount - 1 WHERE id = ?";
+                String updateUserBooksSql = "UPDATE users SET books = CONCAT(IFNULL(books, ''), ?) WHERE id = ?";
 
                 try (Connection conn = Database.getConnection();
                      PreparedStatement rentStatement = conn.prepareStatement(rentSql);
-                     PreparedStatement updateBookStatement = conn.prepareStatement(updateBookSql)) {
+                     PreparedStatement updateBookStatement = conn.prepareStatement(updateBookSql);
+                     PreparedStatement updateUserBooksStatement = conn.prepareStatement(updateUserBooksSql)) {
 
                     rentStatement.setInt(1, user.getId());
                     rentStatement.setInt(2, bookId);
@@ -112,6 +114,12 @@ public class Biblioteka extends JFrame{
 
                     updateBookStatement.setInt(1, bookId);
                     updateBookStatement.executeUpdate();
+
+                    // Dodaj informację o wypożyczeniu książki do kolumny "books" w tabeli "users"
+                    String bookInfo = bookId + ": " + java.sql.Date.valueOf(LocalDate.now().plusDays(14));
+                    updateUserBooksStatement.setString(1, ", " + bookInfo);
+                    updateUserBooksStatement.setInt(2, user.getId());
+                    updateUserBooksStatement.executeUpdate();
 
                     JOptionPane.showMessageDialog(null, "Wypożyczono książkę");
                 } catch (SQLException ex) {

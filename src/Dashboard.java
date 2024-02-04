@@ -135,6 +135,13 @@ public class Dashboard extends JFrame{
             }
         });
         showUserRentedBooks();
+        closeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                System.out.println("Wyłączono program.");
+            }
+        });
     }
     private void showUserRentedBooks() {
         String sql = "SELECT b.book_name, b.book_author, r.rent_date, r.return_date, r.payment_amount FROM rent r " +

@@ -8,13 +8,14 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 
 public class AdminDashboard extends JFrame{
     private JPanel JPanel1;
     private JTable table1;
     private JButton closeButton;
-    private JButton edytujButton;
     private JButton usunButton;
     private JPanel close;
     private JLabel jDane;
@@ -64,25 +65,6 @@ public class AdminDashboard extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-            }
-        });
-        edytujButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int selectedRow = table1.getSelectedRow();
-                if (selectedRow != -1) {
-                    int userId = (int) table1.getValueAt(selectedRow, 0);
-
-                    try {
-                        String books = getBooksForUser(userId);
-                        showBooksDialog(books);
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                        JOptionPane.showMessageDialog(null, "Błąd podczas pobierania danych.", "Błąd", JOptionPane.ERROR_MESSAGE);
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Nie wybrano użytkownika.", "Błąd", JOptionPane.WARNING_MESSAGE);
-                }
             }
         });
         usunButton.addActionListener(new ActionListener() {
@@ -145,14 +127,22 @@ public class AdminDashboard extends JFrame{
                 String userName = rs.getString("name") + " " + rs.getString("surname");
                 String userMail = rs.getString("mail");
                 String userBooks = rs.getString("books");
+
+                // Dodaj warunek sprawdzający, czy userBooks jest null
+                String[] borrowedBooks = (userBooks != null) ? userBooks.split(", ") : new String[]{};
                 String overdueBooks = getOverdueBooks(userBooks);
-                String overdueFees = calculateOverdueFees(overdueBooks);
+                String overdueFees = "";
+
+                // Dodaj warunek sprawdzający, czy borrowedBooks nie jest null
+                if (borrowedBooks != null) {
+                    overdueFees = String.valueOf(calculateOverdueFees(overdueBooks));
+                }
 
                 model.addRow(new String[]{
                         String.valueOf(userId),
                         userName,
                         userMail,
-                        userBooks,
+                        String.valueOf(borrowedBooks.length),  // Zmiana: Ilość wypożyczonych książek
                         overdueBooks,
                         overdueFees
                 });
@@ -171,30 +161,33 @@ public class AdminDashboard extends JFrame{
         });
 
     }
-    private double calculateOverdueFees(int userId) {
+    private double calculateOverdueFees(String books) {
         double overdueFees = 0.0;
 
-        final String DB_URL = "jdbc:mysql://localhost/MyStore?serverTimezone=UTC";
-        final String USERNAME = "root";
-        final String PASSWORD = "";
+        if (books != null && !books.isEmpty()) {
+            String[] bookList = books.split(", ");
+            for (String book : bookList) {
+                String[] bookInfo = book.split(":");
+                if (bookInfo.length == 2) {
+                    String returnDate = bookInfo[1];
 
-        try (Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD)) {
-            String overdueSql = "SELECT * FROM rent WHERE user_id=? AND return_date < current_date";
-            try (PreparedStatement overduePs = conn.prepareStatement(overdueSql)) {
-                overduePs.setInt(1, userId);
-                ResultSet overdueRs = overduePs.executeQuery();
+                    // Sprawdź, czy książka jest zaległa
+                    if (returnDate != null && !returnDate.isEmpty()) {
+                        try {
+                            LocalDate currentDate = LocalDate.now();
+                            LocalDate dueDate = LocalDate.parse(returnDate.trim());
 
-                while (overdueRs.next()) {
-                    LocalDate returnDate = overdueRs.getDate("return_date").toLocalDate();
-                    LocalDate currentDate = LocalDate.now();
-                    long daysOverdue = ChronoUnit.DAYS.between(returnDate, currentDate);
-
-                    // Oblicz opłaty za opóźnienie (1 dzień = 3 zł)
-                    overdueFees += daysOverdue * 3;
+                            if (currentDate.isAfter(dueDate)) {
+                                long daysOverdue = ChronoUnit.DAYS.between(dueDate, currentDate);
+                                overdueFees += daysOverdue * 3.0; // Przyjęta stawka za opóźnienie (1 dzień = 3 zł)
+                            }
+                        } catch (DateTimeParseException e) {
+                            // Dodaj obsługę błędnych dat (jeśli występują)
+                            System.err.println("Błąd podczas parsowania daty: " + e.getMessage());
+                        }
+                    }
                 }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
 
         return overdueFees;
@@ -211,40 +204,41 @@ public class AdminDashboard extends JFrame{
     private void refreshTable() {
 
     }
-    private String getBooksForUser(int userId) throws SQLException {
-        Connection connection = Database.getConnection();
-        String sql = "SELECT books FROM users WHERE id = ?";
-        try (PreparedStatement pst = connection.prepareStatement(sql)) {
-            pst.setInt(1, userId);
-            ResultSet rs = pst.executeQuery();
-            if (rs.next()) {
-                return rs.getString("books");
+    private String getOverdueBooks(String books) {
+        StringBuilder overdueBooks = new StringBuilder();
+
+        if (books != null && !books.isEmpty()) {
+            String[] bookList = books.split(", ");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+            for (String book : bookList) {
+                String[] bookInfo = book.split(":");
+                if (bookInfo.length == 2) {
+                    String bookName = bookInfo[0];
+                    String returnDate = bookInfo[1];
+
+                    // Sprawdź, czy książka jest zaległa
+                    if (returnDate != null && !returnDate.isEmpty()) {
+                        try {
+                            LocalDate currentDate = LocalDate.now();
+                            LocalDate dueDate = LocalDate.parse(returnDate.trim(), formatter);
+
+                            if (currentDate.isAfter(dueDate)) {
+                                if (overdueBooks.length() > 0) {
+                                    overdueBooks.append(", ");
+                                }
+                                overdueBooks.append(bookName).append(":").append(returnDate);
+                            }
+                        } catch (DateTimeParseException e) {
+                            // Dodaj obsługę błędnych dat (jeśli występują)
+                            System.err.println("Błąd podczas parsowania daty: " + e.getMessage());
+                        }
+                    }
+                }
             }
         }
-        return "";
-    }
-    private void showBooksDialog(String books) {
-        DefaultTableModel model = new DefaultTableModel(new String[]{"Książki użytkownika"}, 0);
-        String[] bookList = books.split(", ");  // Zakładam, że książki są oddzielone przecinkiem
-        for (String book : bookList) {
-            model.addRow(new String[]{book});
-        }
-        ksiazkiTable.setModel(model);
 
-        // Utwórz nowy dialog z tabelą książek użytkownika
-        JDialog dialog = new JDialog(this, "Książki użytkownika", true);
-        dialog.setLayout(new BorderLayout());
-        dialog.add(new JScrollPane(ksiazkiTable), BorderLayout.CENTER);
-        dialog.setSize(400, 300);
-        dialog.setLocationRelativeTo(this);
-        dialog.setVisible(true);
-    }
-    private String getOverdueBooks(String books) {
-        return books;
-    }
-
-    private String calculateOverdueFees(String overdueBooks) {
-        return overdueBooks.length() * 3 + "zł";
+        return overdueBooks.toString();
     }
 }
 
