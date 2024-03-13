@@ -117,7 +117,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `surname`, `mail`, `password`, `books`, `overdue_books`, `user_type`) VALUES
-(10, 'Patryk', 'Jarosiewicz', 'pj123066@stud.ur.edu.pl', 'admin', '0, 13: 2024-02-18, 15: 2024-02-18, 22: 2024-02-18, 22: 2024-02-18', 0, 'standard'),
+(10, 'Patryk', 'Jaro', '123066@stud.ur.edu.pl', 'admin', '0, 13: 2024-02-18, 15: 2024-02-18, 22: 2024-02-18, 22: 2024-02-18', 0, 'standard'),
 (11, 'Krzysztof', 'Motas', 'km660321@stud.ur.edu.pl', 'admin', '0', 0, 'standard'),
 (12, 'Testowy', 'Użytkownik', 'test@test.pl', 'admin', ', 30: 2024-02-18, 28: 2024-02-18, 26: 2024-02-18, 23: 2024-02-18, 19: 2024-02-18', 0, 'standard'),
 (13, 'Adam', 'Nowak', 'adamnowak@gmail.com', 'admin', NULL, 0, 'standard'),
